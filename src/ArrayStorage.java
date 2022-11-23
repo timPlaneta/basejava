@@ -1,46 +1,43 @@
+import java.util.Arrays;
+
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
 
-    private int cntResume = 0;
+    private int countResume;
     Resume[] storage = new Resume[10000];
 
     void clear() {
-        for (int i = 0; i < cntResume; i++) {
+        for (int i = 0; i < countResume; i++) {
             storage[i] = null;
         }
-        cntResume = 0;
+        countResume = 0;
     }
 
     void save(Resume r) {
         if (r.uuid != null) {
-            storage[cntResume] = r;
-            cntResume++;
+            storage[countResume] = r;
+            countResume++;
         }
     }
 
     Resume get(String uuid) {
-        Resume res = null;
-
-        for (Resume r : storage) {
-            if (r == null) break;
-
-            if (r.uuid.equals(uuid)) {
-                res = r;
-                break;
+        for (int i = 0; i < countResume; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
             }
         }
-        return res;
+        return null;
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < cntResume; i++) {
+        for (int i = 0; i < countResume; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                storage[i] = null;
-                cntResume--;
+                storage[i] = storage[countResume - 1];
+                storage[countResume - 1] = null;
+                countResume--;
 
-                shiftResume(i);
                 break;
             }
         }
@@ -50,24 +47,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] res = new Resume[cntResume];
-
-        for (int i = 0; i < cntResume; i++) {
-            res[i] = storage[i];
-        }
-        return res;
+        return Arrays.copyOf(storage, countResume);
     }
 
     int size() {
-        return cntResume;
-    }
-
-    private void shiftResume(final int startIndex) {
-        int shift = startIndex;
-
-        while(storage[shift + 1] != null) {
-            storage[shift] = storage[shift + 1];
-            shift++;
-        }
+        return countResume;
     }
 }
