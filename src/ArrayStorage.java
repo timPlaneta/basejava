@@ -24,6 +24,8 @@ public class ArrayStorage {
         Resume res = null;
 
         for (Resume r : storage) {
+            if (r == null) break;
+
             if (r.uuid.equals(uuid)) {
                 res = r;
                 break;
@@ -33,6 +35,15 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        for (int i = 0; i < cntResume; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                storage[i] = null;
+                cntResume--;
+
+                shiftResume(i);
+                break;
+            }
+        }
     }
 
     /**
@@ -49,5 +60,14 @@ public class ArrayStorage {
 
     int size() {
         return cntResume;
+    }
+
+    private void shiftResume(final int startIndex) {
+        int shift = startIndex;
+
+        while(storage[shift + 1] != null) {
+            storage[shift] = storage[shift + 1];
+            shift++;
+        }
     }
 }
